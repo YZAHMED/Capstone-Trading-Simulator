@@ -56,3 +56,14 @@ def get_current_user(
             detail="User not found or deactivated",
         )
     return user
+
+
+def require_role(*allowed_roles: str):
+    def checker(user: models.User = Depends(get_current_user)) -> models.User:
+        if user.role not in allowed_roles:
+            raise HTTPException(
+                status_code=status.HTTP_403_FORBIDDEN,
+                detail="You are not allowed to perform this action",
+            )
+        return user
+    return checker

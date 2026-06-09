@@ -11,6 +11,12 @@ function LoginPage() {
   const [error, setError] = useState('')
   const [loading, setLoading] = useState(false)
 
+  function homePageForRole(role: string): string {
+    if (role === 'admin') return '/admin/users'
+    if (role === 'analyst') return '/analytics'
+    return '/dashboard'
+  }
+
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault()
     setError('')
@@ -18,7 +24,7 @@ function LoginPage() {
     try {
       const result = await loginUser(username, password)
       login(result.access_token, result.user)
-      navigate('/')
+      navigate(homePageForRole(result.user.role))
     } catch (err: any) {
       setError(err.response?.data?.detail || 'Invalid username or password')
     } finally {

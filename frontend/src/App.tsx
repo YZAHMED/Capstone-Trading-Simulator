@@ -1,33 +1,14 @@
 import { BrowserRouter, Routes, Route } from 'react-router-dom'
-import { useEffect, useState } from 'react'
-import { AuthProvider, useAuth } from './context/AuthContext'
-import { api } from './api/client'
+import { AuthProvider } from './context/AuthContext'
 import NavBar from './components/NavBar'
-import RegisterPage from './pages/RegisterPage'
+import HomePage from './pages/HomePage'
 import LoginPage from './pages/LoginPage'
+import RegisterPage from './pages/RegisterPage'
 
-function Home() {
-  const { user } = useAuth()
-  const [status, setStatus] = useState<string>('checking...')
-
-  useEffect(() => {
-    api.get('/health')
-      .then((res) => setStatus(res.data.status))
-      .catch(() => setStatus('cannot reach backend'))
-  }, [])
-
+function NotFound() {
   return (
-    <div className="min-h-screen bg-gray-50">
-      <NavBar />
-      <div className="max-w-5xl mx-auto px-4 py-12 text-center">
-        <h1 className="text-2xl font-bold text-gray-800">Trading Simulator</h1>
-        <p className="mt-2 text-gray-600">Backend status: {status}</p>
-        {user ? (
-          <p className="mt-4 text-gray-700">Welcome back, {user.username}!</p>
-        ) : (
-          <p className="mt-4 text-gray-700">Please log in or create an account to get started.</p>
-        )}
-      </div>
+    <div className="max-w-5xl mx-auto px-4 py-12 text-center text-gray-600">
+      Page not found.
     </div>
   )
 }
@@ -36,11 +17,15 @@ function App() {
   return (
     <AuthProvider>
       <BrowserRouter>
-        <Routes>
-          <Route path="/" element={<Home />} />
-          <Route path="/login" element={<LoginPage />} />
-          <Route path="/register" element={<RegisterPage />} />
-        </Routes>
+        <div className="min-h-screen bg-gray-50">
+          <NavBar />
+          <Routes>
+            <Route path="/" element={<HomePage />} />
+            <Route path="/login" element={<LoginPage />} />
+            <Route path="/register" element={<RegisterPage />} />
+            <Route path="*" element={<NotFound />} />
+          </Routes>
+        </div>
       </BrowserRouter>
     </AuthProvider>
   )
