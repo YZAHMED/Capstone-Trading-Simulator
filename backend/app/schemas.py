@@ -1,4 +1,5 @@
 from datetime import datetime
+from typing import Optional
 from pydantic import BaseModel, EmailStr, ConfigDict
 
 
@@ -23,3 +24,30 @@ class Token(BaseModel):
     access_token: str
     token_type: str
     user: UserOut
+
+
+class SimulationBase(BaseModel):
+    name: str
+    symbol: str
+    num_transactions: int
+    rate_per_second: int
+    duration_seconds: int
+
+
+class SimulationCreate(SimulationBase):
+    pass
+
+
+class SimulationUpdate(SimulationBase):
+    pass
+
+
+class SimulationOut(SimulationBase):
+    id: int
+    user_id: int
+    status: str
+    created_at: datetime
+    started_at: Optional[datetime] = None
+    finished_at: Optional[datetime] = None
+
+    model_config = ConfigDict(from_attributes=True)

@@ -3,9 +3,11 @@ from fastapi.middleware.cors import CORSMiddleware
 
 from app.database import engine
 from app import models
-from app.routes import users, auth
+from app.routes import users, auth, simulations
+from app.seed import seed_default_users
 
 models.Base.metadata.create_all(bind=engine)
+seed_default_users()
 
 app = FastAPI(title="Trading Simulator API")
 
@@ -19,6 +21,7 @@ app.add_middleware(
 
 app.include_router(users.router)
 app.include_router(auth.router)
+app.include_router(simulations.router)
 
 
 @app.get("/")
