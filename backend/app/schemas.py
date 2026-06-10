@@ -51,3 +51,10 @@ class SimulationOut(SimulationBase):
     finished_at: Optional[datetime] = None
 
     model_config = ConfigDict(from_attributes=True)
+
+
+class SimulationProgress(BaseModel):
+    id: int
+    status: str
+    completed: int
+    total: int

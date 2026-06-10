@@ -8,6 +8,7 @@ import RegisterPage from './pages/RegisterPage'
 import DashboardPage from './pages/DashboardPage'
 import NewSimulationPage from './pages/NewSimulationPage'
 import EditSimulationPage from './pages/EditSimulationPage'
+import RunPage from './pages/RunPage'
 
 function NotFound() {
   return (
@@ -48,6 +49,14 @@ function App() {
               element={
                 <RoleRoute allowed={['trader']}>
                   <EditSimulationPage />
+                </RoleRoute>
+              }
+            />
+            <Route
+              path="/simulations/:id/run"
+              element={
+                <RoleRoute allowed={['trader']}>
+                  <RunPage />
                 </RoleRoute>
               }
             />

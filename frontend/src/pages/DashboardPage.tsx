@@ -81,11 +81,27 @@ function DashboardPage() {
                   </td>
                   <td className="p-3 text-right space-x-3">
                     {s.status === 'draft' && (
+                      <>
+                        <Link
+                          to={`/simulations/${s.id}/run`}
+                          className="text-green-700 hover:underline"
+                        >
+                          Run
+                        </Link>
+                        <Link
+                          to={`/simulations/${s.id}/edit`}
+                          className="text-blue-600 hover:underline"
+                        >
+                          Edit
+                        </Link>
+                      </>
+                    )}
+                    {s.status === 'running' && (
                       <Link
-                        to={`/simulations/${s.id}/edit`}
-                        className="text-blue-600 hover:underline"
+                        to={`/simulations/${s.id}/run`}
+                        className="text-yellow-700 hover:underline"
                       >
-                        Edit
+                        View progress
                       </Link>
                     )}
                     <button

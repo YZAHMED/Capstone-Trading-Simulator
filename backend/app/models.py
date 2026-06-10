@@ -38,3 +38,21 @@ class Simulation(Base):
     finished_at = Column(DateTime(timezone=True), nullable=True)
 
     owner = relationship("User", back_populates="simulations")
+    results = relationship(
+        "SimulationResult",
+        back_populates="simulation",
+        cascade="all, delete-orphan",
+    )
+
+
+class SimulationResult(Base):
+    __tablename__ = "simulation_results"
+
+    id = Column(Integer, primary_key=True, index=True)
+    simulation_id = Column(Integer, ForeignKey("simulations.id"), nullable=False, index=True)
+    transaction_number = Column(Integer, nullable=False)
+    latency_ms = Column(Integer, nullable=False)
+    success = Column(Boolean, nullable=False)
+    timestamp = Column(DateTime(timezone=True), server_default=func.now())
+
+    simulation = relationship("Simulation", back_populates="results")
