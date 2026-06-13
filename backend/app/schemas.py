@@ -1,5 +1,5 @@
 from datetime import datetime
-from typing import Optional
+from typing import List, Optional
 from pydantic import BaseModel, EmailStr, ConfigDict
 
 
@@ -58,3 +58,18 @@ class SimulationProgress(BaseModel):
     status: str
     completed: int
     total: int
+
+
+class SimulationPoint(BaseModel):
+    transaction_number: int
+    latency_ms: int
+    success: bool
+
+
+class SimulationResults(BaseModel):
+    simulation: SimulationOut
+    total: int
+    success_rate: float
+    avg_latency_ms: float
+    p95_latency_ms: int
+    points: List[SimulationPoint]

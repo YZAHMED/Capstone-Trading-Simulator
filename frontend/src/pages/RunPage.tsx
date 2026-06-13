@@ -75,7 +75,15 @@ function RunPage() {
       </div>
 
       {done ? (
-        <div className="mt-6">
+        <div className="mt-6 space-x-4">
+          {progress?.status === 'completed' && (
+            <Link
+              to={`/simulations/${id}/results`}
+              className="text-blue-600 hover:underline"
+            >
+              View results
+            </Link>
+          )}
           <Link to="/dashboard" className="text-blue-600 hover:underline">
             Back to dashboard
           </Link>

@@ -104,6 +104,14 @@ function DashboardPage() {
                         View progress
                       </Link>
                     )}
+                    {(s.status === 'completed' || s.status === 'failed') && (
+                      <Link
+                        to={`/simulations/${s.id}/results`}
+                        className="text-blue-600 hover:underline"
+                      >
+                        View results
+                      </Link>
+                    )}
                     <button
                       onClick={() => setDeleting(s)}
                       className="text-red-600 hover:underline"
