@@ -73,3 +73,41 @@ class SimulationResults(BaseModel):
     avg_latency_ms: float
     p95_latency_ms: int
     points: List[SimulationPoint]
+
+
+class DailyMetric(BaseModel):
+    day: str
+    value: float
+
+
+class AnalyticsSummary(BaseModel):
+    range: str
+    total_simulations: int
+    total_completed: int
+    avg_latency_all_time: float
+    daily_avg_latency: List[DailyMetric]
+    daily_runs: List[DailyMetric]
+
+
+class HistoryItem(BaseModel):
+    id: int
+    user_id: int
+    username: str
+    name: str
+    symbol: str
+    status: str
+    created_at: datetime
+    started_at: Optional[datetime] = None
+    finished_at: Optional[datetime] = None
+
+
+class RoleChange(BaseModel):
+    role: str
+
+
+class ActivityLogEntry(BaseModel):
+    id: int
+    actor_username: str
+    action: str
+    target: Optional[str] = None
+    timestamp: datetime

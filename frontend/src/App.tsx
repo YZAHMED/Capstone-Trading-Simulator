@@ -10,6 +10,10 @@ import NewSimulationPage from './pages/NewSimulationPage'
 import EditSimulationPage from './pages/EditSimulationPage'
 import RunPage from './pages/RunPage'
 import ResultsPage from './pages/ResultsPage'
+import AnalyticsPage from './pages/AnalyticsPage'
+import HistoryPage from './pages/HistoryPage'
+import AdminUsersPage from './pages/AdminUsersPage'
+import AdminActivityPage from './pages/AdminActivityPage'
 
 function NotFound() {
   return (
@@ -29,46 +33,19 @@ function App() {
             <Route path="/" element={<HomePage />} />
             <Route path="/login" element={<LoginPage />} />
             <Route path="/register" element={<RegisterPage />} />
-            <Route
-              path="/dashboard"
-              element={
-                <RoleRoute allowed={['trader']}>
-                  <DashboardPage />
-                </RoleRoute>
-              }
-            />
-            <Route
-              path="/simulations/new"
-              element={
-                <RoleRoute allowed={['trader']}>
-                  <NewSimulationPage />
-                </RoleRoute>
-              }
-            />
-            <Route
-              path="/simulations/:id/edit"
-              element={
-                <RoleRoute allowed={['trader']}>
-                  <EditSimulationPage />
-                </RoleRoute>
-              }
-            />
-            <Route
-              path="/simulations/:id/run"
-              element={
-                <RoleRoute allowed={['trader']}>
-                  <RunPage />
-                </RoleRoute>
-              }
-            />
-            <Route
-              path="/simulations/:id/results"
-              element={
-                <RoleRoute allowed={['trader', 'analyst']}>
-                  <ResultsPage />
-                </RoleRoute>
-              }
-            />
+
+            <Route path="/dashboard" element={<RoleRoute allowed={['trader']}><DashboardPage /></RoleRoute>} />
+            <Route path="/simulations/new" element={<RoleRoute allowed={['trader']}><NewSimulationPage /></RoleRoute>} />
+            <Route path="/simulations/:id/edit" element={<RoleRoute allowed={['trader']}><EditSimulationPage /></RoleRoute>} />
+            <Route path="/simulations/:id/run" element={<RoleRoute allowed={['trader']}><RunPage /></RoleRoute>} />
+            <Route path="/simulations/:id/results" element={<RoleRoute allowed={['trader', 'analyst']}><ResultsPage /></RoleRoute>} />
+
+            <Route path="/analytics" element={<RoleRoute allowed={['analyst', 'admin']}><AnalyticsPage /></RoleRoute>} />
+            <Route path="/history" element={<RoleRoute allowed={['analyst', 'admin']}><HistoryPage /></RoleRoute>} />
+
+            <Route path="/admin/users" element={<RoleRoute allowed={['admin']}><AdminUsersPage /></RoleRoute>} />
+            <Route path="/admin/activity" element={<RoleRoute allowed={['admin']}><AdminActivityPage /></RoleRoute>} />
+
             <Route path="*" element={<NotFound />} />
           </Routes>
         </div>

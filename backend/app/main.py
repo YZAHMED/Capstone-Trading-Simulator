@@ -3,7 +3,7 @@ from fastapi.middleware.cors import CORSMiddleware
 
 from app.database import engine
 from app import models
-from app.routes import users, auth, simulations, run
+from app.routes import users, auth, simulations, run, analytics, admin
 from app.seed import seed_default_users
 
 models.Base.metadata.create_all(bind=engine)
@@ -23,6 +23,8 @@ app.include_router(users.router)
 app.include_router(auth.router)
 app.include_router(simulations.router)
 app.include_router(run.router)
+app.include_router(analytics.router)
+app.include_router(admin.router)
 
 
 @app.get("/")

@@ -56,3 +56,15 @@ class SimulationResult(Base):
     timestamp = Column(DateTime(timezone=True), server_default=func.now())
 
     simulation = relationship("Simulation", back_populates="results")
+
+
+class ActivityLog(Base):
+    __tablename__ = "activity_log"
+
+    id = Column(Integer, primary_key=True, index=True)
+    actor_user_id = Column(Integer, ForeignKey("users.id"), nullable=False)
+    action = Column(String(50), nullable=False)
+    target = Column(String(255), nullable=True)
+    timestamp = Column(DateTime(timezone=True), server_default=func.now())
+
+    actor = relationship("User")
