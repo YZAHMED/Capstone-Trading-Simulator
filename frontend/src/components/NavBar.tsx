@@ -1,13 +1,42 @@
+import { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
 import { useAuth } from '../context/AuthContext'
+import { api } from '../api/client'
 
 function NavBar() {
   const { user, logout } = useAuth()
+  const [healthy, setHealthy] = useState(true)
+
+  useEffect(() => {
+    let cancelled = false
+
+    async function check() {
+      try {
+        await api.get('/health')
+        if (!cancelled) setHealthy(true)
+      } catch {
+        if (!cancelled) setHealthy(false)
+      }
+    }
+
+    check()
+    const id = setInterval(check, 30000)
+    return () => {
+      cancelled = true
+      clearInterval(id)
+    }
+  }, [])
 
   return (
     <nav className="bg-white shadow-sm border-b border-gray-200">
       <div className="max-w-5xl mx-auto px-4 py-3 flex items-center justify-between">
-        <Link to="/" className="font-bold text-gray-800">Trading Simulator</Link>
+        <div className="flex items-center space-x-2">
+          <span
+            className={`w-2 h-2 rounded-full ${healthy ? 'bg-green-500' : 'bg-red-500'}`}
+            title={healthy ? 'backend is reachable' : 'backend is not reachable'}
+          />
+          <Link to="/" className="font-bold text-gray-800">Trading Simulator</Link>
+        </div>
 
         <div className="flex items-center space-x-4 text-sm">
           {user?.role === 'trader' && (
@@ -17,31 +46,21 @@ function NavBar() {
           )}
           {user?.role === 'analyst' && (
             <>
-              <Link to="/analytics" className="text-gray-700 hover:text-gray-900">
-                Analytics
-              </Link>
-              <Link to="/history" className="text-gray-700 hover:text-gray-900">
-                History
-              </Link>
+              <Link to="/analytics" className="text-gray-700 hover:text-gray-900">Analytics</Link>
+              <Link to="/history" className="text-gray-700 hover:text-gray-900">History</Link>
             </>
           )}
           {user?.role === 'admin' && (
             <>
-              <Link to="/admin/users" className="text-gray-700 hover:text-gray-900">
-                Manage Users
-              </Link>
-              <Link to="/admin/activity" className="text-gray-700 hover:text-gray-900">
-                Activity Log
-              </Link>
+              <Link to="/admin/users" className="text-gray-700 hover:text-gray-900">Manage Users</Link>
+              <Link to="/admin/activity" className="text-gray-700 hover:text-gray-900">Activity Log</Link>
             </>
           )}
 
           {user ? (
             <>
               <span className="text-gray-500">{user.username}</span>
-              <button onClick={logout} className="text-blue-600 hover:underline">
-                Log out
-              </button>
+              <button onClick={logout} className="text-blue-600 hover:underline">Log out</button>
             </>
           ) : (
             <>
