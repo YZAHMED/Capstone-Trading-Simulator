@@ -118,6 +118,56 @@ function HomePage() {
           </div>
         </div>
 
+        <div className="mb-16">
+          <h2 className="text-2xl font-bold text-gray-900 mb-2 text-center">
+            User stories
+          </h2>
+          <p className="text-gray-500 text-center mb-8 text-sm">
+            Every story below is wired up and testable in the app.
+          </p>
+          <div className="bg-white border border-gray-100 rounded-xl p-6 shadow-sm">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-8">
+
+              <div>
+                <h3 className="text-xs font-semibold text-gray-500 uppercase tracking-wider mb-3">
+                  Open to everyone
+                </h3>
+                <ul className="space-y-2.5">
+                  {GENERAL_STORIES.map((s, i) => <StoryItem key={i} text={s} color="gray" />)}
+                </ul>
+              </div>
+
+              <div>
+                <h3 className="text-xs font-semibold text-blue-600 uppercase tracking-wider mb-3">
+                  As a Trader
+                </h3>
+                <ul className="space-y-2.5">
+                  {TRADER_STORIES.map((s, i) => <StoryItem key={i} text={s} color="blue" />)}
+                </ul>
+              </div>
+
+              <div>
+                <h3 className="text-xs font-semibold text-emerald-600 uppercase tracking-wider mb-3">
+                  As a System Analyst
+                </h3>
+                <ul className="space-y-2.5">
+                  {ANALYST_STORIES.map((s, i) => <StoryItem key={i} text={s} color="emerald" />)}
+                </ul>
+              </div>
+
+              <div>
+                <h3 className="text-xs font-semibold text-violet-600 uppercase tracking-wider mb-3">
+                  As an Administrator
+                </h3>
+                <ul className="space-y-2.5">
+                  {ADMIN_STORIES.map((s, i) => <StoryItem key={i} text={s} color="violet" />)}
+                </ul>
+              </div>
+
+            </div>
+          </div>
+        </div>
+
         <div className="bg-white border border-gray-100 rounded-xl p-6 mb-8 border-l-4 border-l-blue-500 shadow-sm">
           <h2 className="text-xl font-bold text-gray-900 mb-3">Why this matters</h2>
           <p className="text-sm text-gray-700 leading-relaxed">
@@ -165,6 +215,57 @@ function HomePage() {
     </div>
   )
 }
+
+type StoryColor = 'gray' | 'blue' | 'emerald' | 'violet'
+
+const STORY_COLORS: Record<StoryColor, string> = {
+  gray: 'bg-gray-100 text-gray-600',
+  blue: 'bg-blue-50 text-blue-600',
+  emerald: 'bg-emerald-50 text-emerald-600',
+  violet: 'bg-violet-50 text-violet-600',
+}
+
+function StoryItem({ text, color }: { text: string; color: StoryColor }) {
+  return (
+    <li className="flex items-start text-sm text-gray-700">
+      <span className={`flex-shrink-0 w-5 h-5 rounded-full flex items-center justify-center mr-2.5 mt-0.5 ${STORY_COLORS[color]}`}>
+        <svg className="w-3 h-3" fill="none" stroke="currentColor" strokeWidth="3" viewBox="0 0 24 24">
+          <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
+        </svg>
+      </span>
+      <span className="leading-snug">{text}</span>
+    </li>
+  )
+}
+
+const GENERAL_STORIES = [
+  'A new visitor can register a new account.',
+  'A registered user can log in with their username and password.',
+  'A logged in user can log out.',
+]
+
+const TRADER_STORIES = [
+  'Create a new simulation by filling in name, symbol, number of transactions, rate per second, and duration.',
+  'Edit a simulation that has not been run yet.',
+  'Delete a simulation (with a confirmation modal).',
+  'Run a simulation and watch the live progress bar update.',
+  'View the results of a completed run: success rate, average latency, p95, and a latency chart.',
+  'Overlay another completed simulation on the chart to compare two runs side by side.',
+]
+
+const ANALYST_STORIES = [
+  'See aggregated platform metrics on the analytics dashboard (totals plus daily latency and daily run count charts).',
+  'Change the date range (last 7 days, last 30 days, all time).',
+  'Browse the history of every simulation across all users.',
+  'Open the read-only results page of any historical simulation.',
+]
+
+const ADMIN_STORIES = [
+  'See the list of all users on the platform.',
+  "Change a user's role (trader, analyst, or admin).",
+  'Deactivate or reactivate any user account.',
+  'Read the activity log of every admin action.',
+]
 
 const STEPS = [
   'Sign up or log in. Three roles are available: Trader, System Analyst, Administrator.',
