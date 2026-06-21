@@ -144,9 +144,23 @@ function HomePage() {
           </ol>
         </div>
 
-        <p className="mt-10 text-xs text-gray-400 text-center">
-          Backend: <span className={status === 'ok' ? 'text-green-600' : 'text-red-500'}>{status}</span>
-        </p>
+        <div className="mt-10 flex justify-center">
+          <div className={`inline-flex items-center gap-2 px-3 py-1.5 rounded-full text-xs font-medium border ${
+            status === 'ok'
+              ? 'bg-green-50 text-green-700 border-green-200'
+              : 'bg-red-50 text-red-700 border-red-200'
+          }`}>
+            <span className="relative flex h-2 w-2">
+              <span className={`animate-ping absolute inline-flex h-full w-full rounded-full opacity-75 ${
+                status === 'ok' ? 'bg-green-400' : 'bg-red-400'
+              }`} />
+              <span className={`relative inline-flex rounded-full h-2 w-2 ${
+                status === 'ok' ? 'bg-green-500' : 'bg-red-500'
+              }`} />
+            </span>
+            {status === 'ok' ? 'System operational' : status === 'checking...' ? 'Checking...' : 'System unavailable'}
+          </div>
+        </div>
       </div>
     </div>
   )
