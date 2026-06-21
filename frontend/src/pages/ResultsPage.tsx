@@ -122,25 +122,35 @@ function ResultsPage() {
       </h1>
       <p className="text-sm text-gray-500 mb-6">Status: {sim.status}</p>
 
-      <div className="grid grid-cols-2 md:grid-cols-4 gap-3 mb-6">
+      <div className="grid grid-cols-2 md:grid-cols-4 gap-3 mb-3">
         <Card label="Total" value={String(data.total)} />
         <Card label="Success rate" value={`${data.success_rate}%`} />
-        <Card label="Avg latency" value={`${data.avg_latency_ms} ms`} />
-        <Card label="p95 latency" value={`${data.p95_latency_ms} ms`} />
+        <Card label="Avg time" value={`${data.avg_latency_ms} ms`} />
+        <Card label="Slowest 5%" value={`${data.p95_latency_ms} ms`} />
       </div>
+      <p className="text-xs text-gray-500 mb-6 leading-relaxed">
+        Total transactions sent. How many succeeded. Average response time in milliseconds.
+        Slowest 5% of responses, also called p95 latency (95 percent of transactions were
+        faster than this).
+      </p>
 
       {compareData && (
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-3 mb-6">
-          <Card label="Compare total" value={String(compareData.total)} />
-          <Card label="Compare success rate" value={`${compareData.success_rate}%`} />
-          <Card label="Compare avg latency" value={`${compareData.avg_latency_ms} ms`} />
-          <Card label="Compare p95 latency" value={`${compareData.p95_latency_ms} ms`} />
-        </div>
+        <>
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-3 mb-3">
+            <Card label="Compare total" value={String(compareData.total)} />
+            <Card label="Compare success rate" value={`${compareData.success_rate}%`} />
+            <Card label="Compare avg time" value={`${compareData.avg_latency_ms} ms`} />
+            <Card label="Compare slowest 5%" value={`${compareData.p95_latency_ms} ms`} />
+          </div>
+          <p className="text-xs text-gray-500 mb-6">
+            Same four numbers for the simulation you picked from the dropdown so you can compare.
+          </p>
+        </>
       )}
 
       <div className="bg-white shadow rounded p-4">
         <div className="flex items-center justify-between mb-3 flex-wrap gap-2">
-          <h2 className="text-sm font-semibold text-gray-700">Latency over time</h2>
+          <h2 className="text-sm font-semibold text-gray-700">Response time over time (ms)</h2>
           {options.length > 0 && (
             <div className="flex items-center text-sm space-x-2">
               <label className="text-gray-600">Compare with:</label>

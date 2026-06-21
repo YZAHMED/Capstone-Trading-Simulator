@@ -96,8 +96,9 @@ function HomePage() {
               <h3 className="font-semibold text-gray-900 mb-2">As a System Analyst</h3>
               <p className="text-sm text-gray-600 leading-relaxed">
                 Look at how the whole platform is performing. A dashboard with
-                charts for average latency by day and runs per day. A history
-                page lists every simulation that has been run on the platform.
+                charts for average response time by day and runs per day. A
+                history page lists every simulation that has been run on the
+                platform.
               </p>
             </div>
 
@@ -249,7 +250,7 @@ const TRADER_STORIES = [
   'Edit a simulation that has not been run yet.',
   'Delete a simulation (with a confirmation modal).',
   'Run a simulation and watch the live progress bar update.',
-  'View the results of a completed run: success rate, average latency, p95, and a latency chart.',
+  'View the results of a completed run: success rate, average response time, slowest 5% (also called p95), and a chart of response time over time.',
   'Overlay another completed simulation on the chart to compare two runs side by side.',
 ]
 
@@ -272,7 +273,7 @@ const STEPS = [
   'As a Trader, click "My Simulations" then "New" to create a simulation. Give it a name, a symbol, the number of transactions, the rate per second, and how many seconds it should run for.',
   'Click Run. A background worker on the server starts generating fake transactions.',
   'Watch the progress bar fill up in real time. Each transaction gets a random latency.',
-  'When the run finishes, the results page shows total transactions, success rate, average latency, p95 latency, and a line chart of latency over time. Pick a second simulation from the dropdown to overlay it on the chart for comparison.',
+  'When the run finishes, the results page shows total transactions, success rate, average response time, slowest 5% of responses, and a line chart of response time over time. Pick a second simulation from the dropdown to overlay it on the chart for comparison.',
 ]
 
 function homePathFor(role: string): string {

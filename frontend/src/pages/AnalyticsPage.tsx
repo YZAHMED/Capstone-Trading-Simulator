@@ -7,12 +7,20 @@ import {
 import { getAnalyticsSummary, AnalyticsSummary } from '../api/analytics'
 
 function AnalyticsPage() {
+  // what: the analyst's main dashboard. shows totals and two charts
+  // gets: nothing from props. range comes from a dropdown that controls what data we ask for
+  // does: holds the range as state ("last7", "last30" or "all")
+  // a useEffect re-runs whenever range changes. it calls getAnalyticsSummary(range)
+  // when new data comes back, the two recharts (LineChart for daily latency, BarChart for daily runs) redraw
+  // returns: the page with two summary tiles (total simulations and average latency)
+  // and the two charts. an empty state if there are no rows yet
   const [range, setRange] = useState('last30')
   const [data, setData] = useState<AnalyticsSummary | null>(null)
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState('')
 
   useEffect(() => {
+    // fires on mount and every time range changes (because the analyst picked a different option)
     setLoading(true)
     setError('')
     getAnalyticsSummary(range)
@@ -29,6 +37,7 @@ function AnalyticsPage() {
   }
   if (!data) return null
 
+  // map the backend's day/value objects into the shapes recharts expects
   const hasData = data.daily_runs.length > 0 || data.daily_avg_latency.length > 0
   const latencyData = data.daily_avg_latency.map((d) => ({ day: d.day, latency: d.value }))
   const runsData = data.daily_runs.map((d) => ({ day: d.day, runs: d.value }))
@@ -59,7 +68,7 @@ function AnalyticsPage() {
           </p>
         </div>
         <div className="bg-white shadow rounded p-4">
-          <p className="text-xs text-gray-500">Average latency (all time)</p>
+          <p className="text-xs text-gray-500">Average response time (all time, ms)</p>
           <p className="text-2xl font-bold text-gray-800 mt-1">
             {data.avg_latency_all_time} ms
           </p>
@@ -72,7 +81,7 @@ function AnalyticsPage() {
         <>
           <div className="bg-white shadow rounded p-4 mb-6">
             <h2 className="text-sm font-semibold text-gray-700 mb-2">
-              Average latency by day
+              Average response time by day (ms)
             </h2>
             <div className="h-64">
               <ResponsiveContainer width="100%" height="100%">
