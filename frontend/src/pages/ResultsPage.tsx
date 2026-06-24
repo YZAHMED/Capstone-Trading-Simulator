@@ -191,27 +191,29 @@ function ResultsPage() {
             About the {failed} failed transaction{failed === 1 ? '' : 's'}
           </p>
           <p className="text-blue-900 leading-relaxed">
-            This simulator randomly marks about 0.5 percent of transactions as
-            failed to mimic what a real trading platform sees in normal
-            operation. So {failed} out of {actual} (~{Math.round((failed / Math.max(actual, 1)) * 1000) / 10}%) is
-            in the expected range and does not point to an actual problem in
-            this run.
+            This simulator models system stress: both failure rate and response
+            time rise as you push more transactions per second. Your run at
+            {' '}{sim.rate_per_second} per second was in the
+            {' '}<span className="font-semibold">{zoneFor(sim.rate_per_second)}</span> zone,
+            so seeing {failed} of {actual} ({Math.round((failed / Math.max(actual, 1)) * 1000) / 10}%) fail is what a real platform would do under the same load.
           </p>
-          <p className="text-blue-900 leading-relaxed mt-2">
-            In a real trading platform, you would investigate failed
-            transactions by:
-          </p>
+          <p className="text-blue-900 leading-relaxed mt-2 font-semibold">Stress zones used by this simulator:</p>
           <ul className="list-disc list-inside text-blue-900 mt-1 ml-2 space-y-0.5">
-            <li>Reading the application logs for the time window of the run</li>
-            <li>Checking the database for stuck or rolled-back orders</li>
-            <li>Watching for timeouts on calls to the broker or exchange API</li>
-            <li>Confirming validation rules did not reject malformed orders</li>
+            <li>Under 500 / second: safe zone, ~0% failures, ~60-100 ms response time</li>
+            <li>500 to 2000 / second: moderate stress, up to 5% failures, response time climbs</li>
+            <li>2000 to 10000 / second: high stress, 5% to 30% failures, response time degrades</li>
+            <li>Above 10000 / second: severe stress, ~40% failures, very high response time</li>
           </ul>
-          <p className="text-blue-900 leading-relaxed mt-2">
-            If the failure rate stays consistently above 1 percent in a real
-            system, the usual fixes are to scale up workers, add retries with
-            backoff on transient errors, or move slow downstream calls off the
-            critical path so they do not block the main flow.
+          <p className="text-blue-900 leading-relaxed mt-2 font-semibold">To get fewer failures:</p>
+          <ul className="list-disc list-inside text-blue-900 mt-1 ml-2 space-y-0.5">
+            <li>Drop Rate per second below 500 to land in the safe zone, OR</li>
+            <li>Split your transactions across several smaller simulations at a lower rate.</li>
+          </ul>
+          <p className="text-blue-900 leading-relaxed mt-3">
+            In a real trading platform, the equivalent fixes are to scale up
+            workers, add retries with backoff on transient errors, or move slow
+            downstream calls off the critical path so they do not block the
+            main flow.
           </p>
         </div>
       )}
@@ -310,6 +312,13 @@ function ResultsPage() {
       </div>
     </div>
   )
+}
+
+function zoneFor(rate: number): string {
+  if (rate <= 500) return 'safe'
+  if (rate <= 2000) return 'moderate stress'
+  if (rate <= 10000) return 'high stress'
+  return 'severe stress'
 }
 
 export default ResultsPage

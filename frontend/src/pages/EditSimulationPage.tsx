@@ -139,28 +139,35 @@ function EditSimulationPage() {
         </div>
 
         {valid && (
-          <div className={`rounded p-4 text-sm border ${willFit ? 'bg-green-50 border-green-200 text-green-900' : 'bg-amber-50 border-amber-200 text-amber-900'}`}>
-            <p className="font-semibold mb-1">
-              {willFit ? 'Preview: this configuration fits' : 'Preview: this will hit the duration limit'}
-            </p>
-            {willFit ? (
-              <p className="leading-relaxed">
-                {r} per second for up to {d} seconds can send {maxFitsInTime} transactions.
-                You asked for {n}, which will finish in about {projectedSeconds} seconds.
-                Expected total transactions sent: {projectedTotal}.
+          <>
+            <div className={`rounded p-4 text-sm border ${willFit ? 'bg-green-50 border-green-200 text-green-900' : 'bg-amber-50 border-amber-200 text-amber-900'}`}>
+              <p className="font-semibold mb-1">
+                {willFit ? 'Capacity: this configuration fits' : 'Capacity: this will hit the duration limit'}
               </p>
-            ) : (
-              <>
+              {willFit ? (
                 <p className="leading-relaxed">
-                  {r} per second for {d} seconds can only send {maxFitsInTime} transactions.
-                  You asked for {n}, so the run will stop early at about {projectedTotal} transactions when the duration limit is hit.
+                  {r} per second for up to {d} seconds can send {maxFitsInTime} transactions.
+                  You asked for {n}, which will finish in about {projectedSeconds} seconds.
+                  Expected total transactions sent: {projectedTotal}.
                 </p>
-                <p className="leading-relaxed mt-2">
-                  To complete all {n}: set Duration to at least {neededDuration} seconds OR set Rate per second to at least {neededRate}.
-                </p>
-              </>
-            )}
-          </div>
+              ) : (
+                <>
+                  <p className="leading-relaxed">
+                    {r} per second for {d} seconds can only send {maxFitsInTime} transactions.
+                    You asked for {n}, so the run will stop early at about {projectedTotal} transactions when the duration limit is hit.
+                  </p>
+                  <p className="leading-relaxed mt-2">
+                    To complete all {n}: set Duration to at least {neededDuration} seconds OR set Rate per second to at least {neededRate}.
+                  </p>
+                </>
+              )}
+            </div>
+
+            <div className={`rounded p-4 text-sm border ${stressBoxClass(r)}`}>
+              <p className="font-semibold mb-1">Stress: {stressLabelFor(r)}</p>
+              <p className="leading-relaxed">{stressDescriptionFor(r)}</p>
+            </div>
+          </>
         )}
 
         {error && <p className="text-sm text-red-600">{error}</p>}
@@ -186,6 +193,33 @@ function EditSimulationPage() {
       </form>
     </div>
   )
+}
+
+function stressLabelFor(rate: number): string {
+  if (rate <= 500) return 'safe zone'
+  if (rate <= 2000) return 'moderate stress'
+  if (rate <= 10000) return 'high stress'
+  return 'severe stress'
+}
+
+function stressDescriptionFor(rate: number): string {
+  if (rate <= 500) {
+    return `At ${rate} per second the simulated platform is in its comfortable zone. Expect ~0% failures and response time around 60-100 ms.`
+  }
+  if (rate <= 2000) {
+    return `At ${rate} per second the platform starts to feel pressure. Expect up to 5% failures and response time creeping up to ~250 ms. Still usable.`
+  }
+  if (rate <= 10000) {
+    return `At ${rate} per second the platform is heavily stressed. Expect 5% to 30% failures and response time between 250 ms and ~800 ms. Reduce the rate for cleaner results.`
+  }
+  return `At ${rate} per second the platform is overloaded. Expect ~40% failures and response time over 1 second. Drop the rate below 500 per second for a clean run.`
+}
+
+function stressBoxClass(rate: number): string {
+  if (rate <= 500) return 'bg-green-50 border-green-200 text-green-900 mt-3'
+  if (rate <= 2000) return 'bg-yellow-50 border-yellow-200 text-yellow-900 mt-3'
+  if (rate <= 10000) return 'bg-orange-50 border-orange-200 text-orange-900 mt-3'
+  return 'bg-red-50 border-red-200 text-red-900 mt-3'
 }
 
 export default EditSimulationPage
