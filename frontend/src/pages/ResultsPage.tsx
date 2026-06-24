@@ -185,6 +185,37 @@ function ResultsPage() {
         Slowest 5% (p95 latency) means 95 percent of transactions were faster than this number.
       </p>
 
+      {failed > 0 && (
+        <div className="bg-blue-50 border border-blue-200 rounded p-4 mb-6 text-sm">
+          <p className="font-semibold text-blue-900 mb-2">
+            About the {failed} failed transaction{failed === 1 ? '' : 's'}
+          </p>
+          <p className="text-blue-900 leading-relaxed">
+            This simulator randomly marks about 0.5 percent of transactions as
+            failed to mimic what a real trading platform sees in normal
+            operation. So {failed} out of {actual} (~{Math.round((failed / Math.max(actual, 1)) * 1000) / 10}%) is
+            in the expected range and does not point to an actual problem in
+            this run.
+          </p>
+          <p className="text-blue-900 leading-relaxed mt-2">
+            In a real trading platform, you would investigate failed
+            transactions by:
+          </p>
+          <ul className="list-disc list-inside text-blue-900 mt-1 ml-2 space-y-0.5">
+            <li>Reading the application logs for the time window of the run</li>
+            <li>Checking the database for stuck or rolled-back orders</li>
+            <li>Watching for timeouts on calls to the broker or exchange API</li>
+            <li>Confirming validation rules did not reject malformed orders</li>
+          </ul>
+          <p className="text-blue-900 leading-relaxed mt-2">
+            If the failure rate stays consistently above 1 percent in a real
+            system, the usual fixes are to scale up workers, add retries with
+            backoff on transient errors, or move slow downstream calls off the
+            critical path so they do not block the main flow.
+          </p>
+        </div>
+      )}
+
       {compareData && (
         <>
           <h3 className="text-sm font-semibold text-gray-700 mb-2 mt-6">
